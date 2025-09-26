@@ -1,0 +1,47 @@
+# Tên của workflow - sẽ hiển thị trên GitHub
+name: Deploy to Production
+
+# Khi nào workflow này chạy?
+on:
+  push:
+    branches: [ main ]  # Chỉ khi push code vào branch main
+
+# Các công việc cần làm
+jobs:
+  # Job 1: Test và Build
+  build:
+    runs-on: ubuntu-latest  # Dùng máy ảo Ubuntu
+    
+    steps:
+    # Bước 1: Lấy code từ repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    # Bước 2: Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    # Bước 3: Cache dependencies để build nhanh hơn
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        
+    # Bước 4: Install dependencies
+    - name: Install dependencies
+      run: npm ci || npm install
+      
+    # Bước 5: Kiểm tra code có chạy được không
+    - name: Test application
+      run: |
+        npm start &
+        sleep 5
+        curl http://localhost:3000 || exit 1
+        pkill -f node || true
+        
+    # Bước 6: Thông báo build thành công
+    - name: Build successful
+      run: echo "✅ Build completed successfully!"
