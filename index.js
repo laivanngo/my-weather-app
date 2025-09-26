@@ -42,6 +42,46 @@ app.get('/', (req, res) => {
     `);
 });
 
+// Thêm route mới - sau route '/' hiện có
+app.get('/about', (req, res) => {
+    res.send(`
+        <html>
+            <head>
+                <title>About - Weather App</title>
+                <style>
+                    /* Copy same styles từ route chính */
+                    body {
+                        font-family: Arial, sans-serif;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        margin: 0;
+                    }
+                    .container {
+                        text-align: center;
+                        padding: 40px;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 20px;
+                        backdrop-filter: blur(10px);
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>📱 About This App</h1>
+                    <p>Weather App v1.0</p>
+                    <p>Built with Node.js, Express, and ❤️</p>
+                    <p>Deployed automatically with GitHub Actions & Vercel!</p>
+                    <br>
+                    <a href="/" style="color: white;">← Back to Home</a>
+                </div>
+            </body>
+        </html>
+    `);
+});
 // Khởi động server
 app.listen(port, () => {
     console.log(`✅ Server đang chạy tại http://localhost:${port}`);
